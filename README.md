@@ -2,8 +2,9 @@
 
 main branch is with platform threads, checkout the virtual threads branch if you want to use virtual threads.
 
-## docker
-application.properties:
+## run locally with docker
+
+application.properties needs to look like this:
 ```
 quarkus.datasource.jdbc.url=jdbc:postgresql://localhost:5432/bookdatabase
 quarkus.datasource.username=postgres
@@ -18,23 +19,34 @@ afterward you need to initialize it:
 ```
 docker exec -it blocking_quarkus psql -U postgres -c "CREATE DATABASE bookdatabase;"
 ```
-oder als one liner:
+or as a one liner:
 ```
 docker run -it --rm=true --name blocking_quarkus -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=123 -e POSTGRES_DB=bookdatabase -p 5432:5432 postgres:13.3
 ```
+also if your code doesn't auto generate a table, you need to manually add it like this:
+```
+CREATE TABLE IF NOT EXISTS book (id SERIAL PRIMARY KEY, title VARCHAR(255), author VARCHAR(255), price INTEGER, isbn VARCHAR(255));
+```
 
 
-then you can start the application
+Afterwards you can start the application.
 
-in the end to ensure that everything docker is killed run this:
+To ensure everything from docker is shutdown run this:
 
 `docker ps -a` // shows all running containers  
 `docker container stop <id>` // kill specific docker container   
 `docker rm $(docker ps -aq)`  // kill ALL docker containers
 
+also remember to remove your docker volumes once you're finished, as they use a lot of data.
 
-# blocking-quarkus-postgres
+```
+docker volume ls
 
+docker volume prune
+```
+
+# Quarkus Blocking - info from setup
+ 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
 If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
