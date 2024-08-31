@@ -1,5 +1,6 @@
 package wilfer.books;
 
+import io.smallrye.common.annotation.RunOnVirtualThread;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -21,6 +22,7 @@ public class BookResource {
 
     @GET
     @Path("{id}")
+    @RunOnVirtualThread
     public Response getBookById(@PathParam("id") Long id) {
         var bookOptional = bookService.getBookById(id);
         return bookOptional.map(Response::ok)
@@ -29,6 +31,7 @@ public class BookResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
+    @RunOnVirtualThread
     public Response addBook(Book book) {
         return Response.ok(bookService.createBook(book)).status(CREATED).build();
     }
@@ -36,6 +39,7 @@ public class BookResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("{id}")
+    @RunOnVirtualThread
     public Response updateBook(@PathParam("id") Long id, Book book) {
         var updatedBook = bookService.updateBook(book, id);
         return updatedBook.map(Response::ok)
@@ -44,6 +48,7 @@ public class BookResource {
 
     @DELETE
     @Path("{id}")
+    @RunOnVirtualThread
     public Response deleteBook(@PathParam("id") Long id) {
         bookService.deleteBook(id);
         return Response.noContent().build();
